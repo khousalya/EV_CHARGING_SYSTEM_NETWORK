@@ -1,0 +1,124 @@
+/* Theme variables and improved contrast */
+:root {
+  --primary: #1b8a44;     /* primary green */
+  --accent: #ff8c42;      /* warm accent for contrast */
+  --sidebar-bg: #073b2e;  /* dark sidebar */
+  --main-bg: linear-gradient(180deg, #eaf8f0 0%, #f7fff6 100%);
+  --surface: #ffffff;     /* card / surface */
+  --text: #073b2e;        /* dark text for readability */
+  --muted: #6b7280;
+  --muted-surface: #f3fbf7;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--main-bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-shell { display:flex; min-height:100vh; }
+.sidebar{
+  width:220px;
+  background: var(--sidebar-bg);
+  padding: 20px;
+  border-right: 1px solid rgba(255,255,255,0.04);
+  color: #e6fff1;
+}
+  .brand{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+  .brand-logo{background:var(--primary);color:white;padding:8px;border-radius:8px;font-weight:700}
+  .brand-text{font-weight:700;color:#e6fff1}
+  .nav ul{list-style:none;padding:0;margin:0}
+  .nav li{padding:10px 8px;border-radius:6px;color:rgba(255,255,255,0.9);cursor:pointer;margin-bottom:6px}
+  .nav li.active{background: linear-gradient(90deg, var(--primary), #14703a); color: #fff}
+  .nav li.danger{color:#ffb3a0}
+
+  .main{flex:1;padding:28px}
+  .main-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  .main-header .welcome{font-size:20px;font-weight:700;color:var(--text)}
+  .main-header button{background: linear-gradient(90deg,var(--accent), #ff6f2e); color:#fff; border:none; padding:8px 14px; border-radius:8px; cursor:pointer}
+
+  .cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+  .card{background:var(--surface);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+  .card-title{font-size:13px;color:var(--muted)}
+  .card-value{font-size:20px;font-weight:700;margin-top:6px}
+
+  /* login/signup */
+  .login-view{display:flex;align-items:center;justify-content:center;height:100vh;padding:0 24px}
+  .login-card{width:420px;background:rgba(255,255,255,0.94);padding:18px;border-radius:10px;box-shadow:0 10px 28px rgba(16,24,40,0.12);color:var(--text)}
+  /* background image for login/signup - place your image at /assets/login-bg.jpg */
+  .login-view {
+    /* darker overlay + multiply blend so image appears more intense/vibrant */
+    background-image: linear-gradient(rgba(0,0,0,0.28), rgba(0,0,0,0.28)), url('assets/login-bg.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-blend-mode: multiply;
+    background-attachment: fixed;
+  }
+  .login-card h2{margin:0 0 8px 0}
+  .form-row{margin:8px 0}
+  .form-row input{width:100%;padding:8px;border:1px solid #e1eef6;border-radius:6px}
+  .secondary{background:#eef2f6;color:var(--text);border:1px solid #d7e8f0}
+  .muted{color:var(--muted);font-size:13px;margin-bottom:6px}
+
+  .split{display:flex;gap:12px}
+  .chart-card{flex:1;background:var(--surface);padding:12px;border-radius:10px}
+  .recent-card{width:360px;background:var(--surface);padding:12px;border-radius:10px}
+
+  table{width:100%;border-collapse:collapse;background:transparent}
+  th,td{padding:12px;text-align:center;border-bottom:1px solid rgba(0,0,0,0.06)}
+  th{color:#fff;font-size:13px}
+
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .controls{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  input,select{padding:8px;border:1px solid #dbeaf1;border-radius:6px}
+  .hidden{display:none}
+
+  .modal{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(10,20,30,0.55);display:flex;align-items:center;justify-content:center;z-index:5000}
+  .modal .modal-content{background:var(--surface);padding:16px;border-radius:8px;width:90%;max-width:720px;color:var(--text);position:relative;pointer-events:auto}
+  .modal .modal-close{position:absolute;right:12px;top:8px;cursor:pointer;font-size:20px;line-height:20px;padding:6px;border-radius:4px}
+/* Defensive: ensure login card and main app are interactive and above stray overlays */
+.login-view, .app-shell { position: relative; z-index: 2000; }
+.login-card, .main { position: relative; z-index: 2001; }
+
+/* Ensure hidden modals / debug console do not capture pointer events */
+.hidden { display: none !important; pointer-events: none !important; }
+#debugConsole { pointer-events: auto; }
+
+/* If some extension inserts a floating element it may block interactions; try to keep app on top */
+body > * { -webkit-transform: translateZ(0); transform: translateZ(0); }
+
+  .main-footer{margin-top:18px;color:var(--muted);font-size:13px}
+
+  /* small responsive */
+  @media (max-width:800px){.sidebar{display:none}.split{flex-direction:column}.recent-card{width:100%}}
+
+  /* debug console */
+  #debugConsole{position:fixed;right:18px;bottom:18px;max-width:420px;max-height:240px;overflow:auto;background:#fff4ea;color:#4a2400;border:1px solid #ffe0c9;padding:10px;border-radius:8px;box-shadow:0 8px 24px rgba(2,6,23,0.2);font-size:13px;z-index:2000}
+  #debugConsole.hidden{display:none}
+
+tr:hover { background-color: rgba(0,0,0,0.03); transition: background 0.15s ease-in; }
+
+th { background: linear-gradient(90deg, var(--primary), #14703a); color: #fff; text-transform: uppercase; letter-spacing: 0.5px; }
+
+td { color: var(--text); }
+
+/* Form section */
+form { display:flex; flex-wrap:wrap; justify-content:space-between; margin-top:20px }
+form input { width:48%; padding:10px; margin-bottom:10px; border:1px solid #e6efe9; border-radius:6px; outline:none; font-size:15px; color:var(--text); background:var(--muted-surface) }
+form input:focus { box-shadow: 0 0 8px rgba(27,138,68,0.25); }
+form button { width:100%; margin-top:10px; background: linear-gradient(90deg,var(--accent), #ff6f2e); color:#fff; border:none; padding:10px; border-radius:6px }
+
+/* Footer */
+footer {
+  margin-top: auto;
+  padding: 10px;
+  font-size: 14px;
+  color: #eee;
+  text-align: center;
+  opacity: 0.8;
+}

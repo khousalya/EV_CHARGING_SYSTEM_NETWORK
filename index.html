@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EV ChargeNet Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <!-- Login / Signup view (shown before auth) -->
+    <section id="view-login" class="view login-view">
+      <div class="login-card">
+        <h2>EV ChargeNet — Sign in</h2>
+        <div id="loginMessage" class="muted">Enter your email to login or sign up below.</div>
+        <div class="form-row"><input id="loginEmail" placeholder="Email" type="email"></div>
+        <div class="form-row"><button id="btnLogin">Login</button> <button id="btnShowSignup" class="secondary">Create account</button></div>
+
+        <hr>
+        <div id="signupArea" class="hidden">
+          <h3>Create account</h3>
+          <div class="form-row"><input id="suName" placeholder="Full name"></div>
+          <div class="form-row"><input id="suEmail" placeholder="Email" type="email"></div>
+          <div class="form-row"><input id="suPhone" placeholder="Phone"></div>
+          <div class="form-row"><input id="suStreet" placeholder="Street"></div>
+          <div class="form-row"><input id="suCity" placeholder="City"></div>
+          <div class="form-row"><input id="suPin" placeholder="PinCode"></div>
+          <div class="form-row"><input id="suDob" placeholder="DOB" type="date"></div>
+          <h4>Vehicle (optional)</h4>
+          <div class="form-row"><input id="svModel" placeholder="Vehicle Model"></div>
+          <div class="form-row"><input id="svType" placeholder="Type (Car/Bike)"></div>
+          <div class="form-row"><input id="svBattery" placeholder="Battery Capacity (e.g. 30 kWh)"></div>
+          <div class="form-row"><button id="btnSignup">Create account</button> <button id="btnCancelSignup" class="secondary">Cancel</button></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="app-shell hidden">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-logo">⚡</div>
+          <div class="brand-text">EV ChargeNet</div>
+        </div>
+        <nav class="nav">
+          <ul>
+            <li data-view="dashboard" class="active">Dashboard</li>
+            <li data-view="vehicles">My Vehicles</li>
+            <li data-view="sessions">Charging Sessions</li>
+            <li data-view="stations">Nearby Stations</li>
+            <li data-view="payments">Payment Summary</li>
+            <li data-view="maintenance">Maintenance & Services</li>
+            <li data-view="facilities">Facilities</li>
+            <li data-view="profile">Profile Settings</li>
+            <li data-action="logout" class="danger">Logout</li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="main-header">
+          <div class="welcome">Welcome, <span id="userName">Rahul</span> 👋</div>
+          <div class="header-actions">
+            <button id="btnNewSession">Start New Charging Session</button>
+          </div>
+        </header>
+
+        <section id="view-dashboard" class="view">
+          <div class="cards-row">
+            <div class="card">
+              <div class="card-title">Total Energy Consumed</div>
+              <div class="card-value" id="totalEnergy">— kWh</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Total Cost</div>
+              <div class="card-value" id="totalCost">— ₹</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Active Vehicle(s)</div>
+              <div class="card-value" id="activeVehicles">—</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Number of Sessions</div>
+              <div class="card-value" id="numSessions">—</div>
+            </div>
+          </div>
+
+          <div class="split">
+            <div class="chart-card">
+              <canvas id="energyChart" height="160"></canvas>
+            </div>
+            <div class="recent-card">
+              <h3>Recent Sessions</h3>
+              <table id="recentSessionsTable">
+                <thead><tr><th>Date</th><th>Vehicle</th><th>Charger</th><th>Energy (kWh)</th><th>Cost (₹)</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-vehicles" class="view hidden">
+          <div class="section-header"><h2>My Vehicles</h2></div>
+          <div id="vehiclesList" class="cards-grid"></div>
+        </section>
+
+        <section id="view-sessions" class="view hidden">
+          <div class="section-header"><h2>Charging Sessions</h2></div>
+          <div id="sessionsControls" class="controls">
+            <label>Filter by Vehicle: <select id="filterVehicle"><option value="">All</option></select></label>
+            <button id="applyFilters">Apply</button>
+          </div>
+          <table id="sessionsTable"><thead></thead><tbody></tbody></table>
+        </section>
+
+        <section id="view-stations" class="view hidden">
+          <h2>Nearby Stations</h2>
+          <div id="stationsGrid" class="cards-grid"></div>
+        </section>
+
+        <section id="view-payments" class="view hidden">
+          <h2>Payment Summary</h2>
+          <div id="paymentSummary"></div>
+        </section>
+
+        <section id="view-maintenance" class="view hidden">
+          <h2>Maintenance & Services</h2>
+          <table id="maintenanceTable"><thead></thead><tbody></tbody></table>
+        </section>
+
+        <section id="view-facilities" class="view hidden">
+          <h2>Facilities</h2>
+          <table id="facilitiesTable"><thead></thead><tbody></tbody></table>
+        </section>
+
+        <section id="view-profile" class="view hidden">
+          <h2>Profile Settings</h2>
+          <form id="profileForm"></form>
+          <div class="form-actions"><button id="saveProfile">Save Changes</button></div>
+        </section>
+
+        <footer class="main-footer">Local admin GUI — backend: <code>http://localhost:3000</code></footer>
+      </main>
+  </div>
+
+    <!-- Modals -->
+    <div id="modalReceipt" class="modal hidden"><div class="modal-content"><span class="modal-close" data-close>×</span><div id="receiptBody"></div></div></div>
+
+    <script src="script.js"></script>
+    <!-- simple debug console for JS errors -->
+    <div id="debugConsole" class="hidden"></div>
+  </body>
+</html>
